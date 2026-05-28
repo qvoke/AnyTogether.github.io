@@ -12,6 +12,8 @@ const STORAGE_KEYS = {
   backendBaseUrl: "watchTogether.backendBaseUrl"
 };
 
+const DEFAULT_BACKEND_BASE_URL = "https://anytogether-backend.onrender.com/";
+
 const requestedRole = new URLSearchParams(window.location.search).get("role");
 const queryRoom = normalizeRoomCode(new URLSearchParams(window.location.search).get("room"));
 const requestedPage = new URLSearchParams(window.location.search).get("page");
@@ -25,7 +27,7 @@ const backendBaseUrl = resolveBackendBaseUrl(
   new URLSearchParams(window.location.search).get("api") ||
     loadStoredValue(STORAGE_KEYS.backendBaseUrl) ||
     window.WATCH_TOGETHER_API_BASE_URL ||
-    window.location.origin
+    DEFAULT_BACKEND_BASE_URL
 );
 
 const joinView = document.getElementById("joinView");

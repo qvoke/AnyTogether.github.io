@@ -4,13 +4,8 @@ Static frontend for GitHub Pages.
 
 ## Use
 
-Open the site with a backend URL:
-
-```text
-?api=https://your-backend.example.com/
-```
-
-The frontend stores the backend URL in local storage after the first use.
+The frontend uses `https://anytogether-backend.onrender.com/` by default.
+You can override it with `?api=https://your-backend.example.com/` if needed.
 
 ## Files
 
