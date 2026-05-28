@@ -1,0 +1,28 @@
+{
+  "manifest_version": 3,
+  "name": "WatchTogether Meta Search",
+  "version": "0.1.0",
+  "description": "Meta-search helper for legal public media streams.",
+  "permissions": ["tabs", "webRequest", "scripting", "storage", "browsingData"],
+  "host_permissions": [
+    "<all_urls>",
+    "http://localhost:3000/*",
+    "https://duckduckgo.com/*",
+    "https://html.duckduckgo.com/*",
+    "https://lite.duckduckgo.com/*"
+  ],
+  "background": {
+    "service_worker": "src/background.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "http://localhost:3000/*",
+        "https://*.github.io/*"
+      ],
+      "js": ["src/content-script.js"],
+      "run_at": "document_start"
+    }
+  ]
+}

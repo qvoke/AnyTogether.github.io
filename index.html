@@ -1,0 +1,1026 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WatchTogether</title>
+  <style>
+    :root {
+      --bg: #08111f;
+      --bg-soft: #0d1729;
+      --panel: #111c30;
+      --panel-2: #0f1a2c;
+      --border: #23314f;
+      --border-soft: #32415f;
+      --text: #e8eef8;
+      --muted: #90a4c2;
+      --accent: #4f7cff;
+      --accent-2: #1d4ed8;
+      --success: #22c55e;
+      --danger: #ef4444;
+      --shadow: 0 18px 64px rgba(0, 0, 0, 0.28);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      min-height: 100%;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top, rgba(79, 124, 255, 0.24), transparent 42%),
+        linear-gradient(180deg, #08111f 0%, #050b16 100%);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    input,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      border: 1px solid var(--border-soft);
+      border-radius: 12px;
+      padding: 10px 14px;
+      background: #13213a;
+      color: var(--text);
+      cursor: pointer;
+      transition: transform 0.14s ease, filter 0.14s ease, border-color 0.14s ease;
+    }
+
+    button:hover {
+      filter: brightness(1.08);
+    }
+
+    button:active {
+      transform: translateY(1px);
+    }
+
+    button:disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
+      transform: none;
+    }
+
+    input,
+    textarea {
+      width: 100%;
+      border: 1px solid var(--border-soft);
+      border-radius: 12px;
+      padding: 11px 14px;
+      background: #0d1729;
+      color: var(--text);
+      min-width: 0;
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+      color: #6880a6;
+    }
+
+    .shell {
+      width: min(1400px, calc(100vw - 32px));
+      margin: 16px auto 28px;
+      display: grid;
+      gap: 16px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 16px;
+      background: rgba(15, 26, 44, 0.78);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+      position: sticky;
+      top: 12px;
+      z-index: 5;
+    }
+
+    .brand {
+      display: grid;
+      gap: 2px;
+      min-width: 0;
+    }
+
+    .brand-title {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+    }
+
+    .brand-subtitle {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .topbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .nav-link,
+    .small-button {
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: #0f1a2c;
+      border: 1px solid var(--border-soft);
+    }
+
+    .small-button.secondary {
+      background: #17253f;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border-radius: 999px;
+      padding: 9px 12px;
+      background: #0f1a2c;
+      border: 1px solid var(--border-soft);
+      color: var(--muted);
+      min-width: 0;
+    }
+
+    .pill strong {
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    .code-button {
+      display: grid;
+      gap: 3px;
+      text-align: left;
+      min-width: 0;
+      background: linear-gradient(180deg, #18305a, #10213e);
+      border-color: #31517d;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    }
+
+    .code-button .label {
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #a9bedb;
+    }
+
+    .code-button .value {
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+    }
+
+    .workspace {
+      display: grid;
+      gap: 16px;
+    }
+
+    .panel {
+      background: rgba(15, 26, 44, 0.82);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+    }
+
+    .join-panel {
+      padding: 22px;
+      display: grid;
+      gap: 18px;
+      max-width: 760px;
+      margin: 38px auto 0;
+    }
+
+    .join-layout {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .setup-card {
+      display: grid;
+      gap: 14px;
+      padding: 18px;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      background: rgba(9, 17, 31, 0.75);
+      min-width: 0;
+    }
+
+    .setup-card h2 {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    .setup-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .join-panel h1,
+    .rooms-header h1 {
+      margin: 0;
+      font-size: 28px;
+      line-height: 1.1;
+    }
+
+    .join-panel p,
+    .rooms-header p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .join-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .field {
+      display: grid;
+      gap: 8px;
+    }
+
+    .field label {
+      font-size: 12px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .join-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .join-actions button {
+      background: linear-gradient(180deg, #1d4ed8, #163c9e);
+      border-color: #2f64e2;
+    }
+
+    .join-actions button.secondary {
+      background: #13213a;
+      border-color: var(--border-soft);
+    }
+
+    .room-code-output {
+      width: 100%;
+      justify-content: space-between;
+    }
+
+    .room-code-output.hidden {
+      display: none;
+    }
+
+    .section-title {
+      margin: 0;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+    }
+
+    .dashboard {
+      display: grid;
+      grid-template-columns: minmax(0, 1.55fr) minmax(320px, 0.95fr);
+      gap: 16px;
+      align-items: start;
+    }
+
+    .dashboard-column {
+      display: grid;
+      gap: 16px;
+      min-width: 0;
+    }
+
+    .sidebar {
+      display: grid;
+      gap: 16px;
+      min-width: 0;
+      align-content: start;
+    }
+
+    .card {
+      padding: 16px;
+      display: grid;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: start;
+      justify-content: space-between;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .card-title {
+      display: grid;
+      gap: 4px;
+      min-width: 0;
+    }
+
+    .card-title h2 {
+      margin: 0;
+      font-size: 18px;
+      line-height: 1.15;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+
+    .card-title p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .room-summary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .stat {
+      padding: 12px;
+      border-radius: 14px;
+      background: #0b1424;
+      border: 1px solid #203049;
+      min-width: 0;
+    }
+
+    .stat-label {
+      display: block;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .stat-value {
+      font-size: 16px;
+      font-weight: 700;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+
+    .room-chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .room-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      background: #0f1a2c;
+      border: 1px solid var(--border-soft);
+      color: var(--text);
+      min-width: 0;
+    }
+
+    .room-chip.is-selected {
+      background: #14356e;
+      border-color: #2f64e2;
+      box-shadow: inset 0 0 0 1px rgba(79, 124, 255, 0.28);
+    }
+
+    .room-chip-select {
+      display: grid;
+      gap: 2px;
+      text-align: left;
+      min-width: 0;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: inherit;
+    }
+
+    .room-chip .room-chip-code {
+      font-weight: 700;
+      letter-spacing: 0.05em;
+    }
+
+    .room-chip .room-chip-count {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .room-chip button {
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: inherit;
+      line-height: 1;
+    }
+
+    .room-chip .close-button {
+      color: var(--muted);
+      font-size: 18px;
+      padding-left: 4px;
+    }
+
+    .inline-join {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+    }
+
+    .section-block {
+      display: grid;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .participants-list,
+    .chat-list,
+    .playlist-list,
+    .rooms-grid {
+      display: grid;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .participant-item,
+    .chat-item,
+    .playlist-item,
+    .room-card {
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: #0b1424;
+      border: 1px solid #203049;
+      min-width: 0;
+    }
+
+    .participant-item {
+      display: grid;
+      gap: 6px;
+    }
+
+    .participant-top,
+    .chat-top,
+    .playlist-top,
+    .room-card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .participant-name,
+    .chat-author,
+    .playlist-name,
+    .room-card-title {
+      font-weight: 700;
+      min-width: 0;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+
+    .meta-line,
+    .chat-meta,
+    .playlist-meta,
+    .room-card-meta {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .chat-item {
+      display: grid;
+      gap: 6px;
+    }
+
+    .chat-body {
+      color: var(--text);
+      line-height: 1.45;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+
+    .chat-form {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: start;
+    }
+
+    .chat-form textarea {
+      min-height: 88px;
+      resize: vertical;
+    }
+
+    .player-shell {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      min-height: 420px;
+      max-height: min(76vh, 800px);
+      background: #020617;
+      border-radius: 18px;
+      overflow: hidden;
+      position: relative;
+      border: 1px solid #203049;
+    }
+
+    video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+      background: #020617;
+      max-width: 100%;
+      max-height: 100%;
+    }
+
+    .series-panel {
+      display: none;
+      gap: 12px;
+      padding: 16px;
+      border: 1px solid #203049;
+      border-radius: 18px;
+      background: rgba(11, 20, 36, 0.88);
+      min-width: 0;
+    }
+
+    .series-panel.is-visible {
+      display: grid;
+    }
+
+    .series-header {
+      display: grid;
+      gap: 4px;
+      min-width: 0;
+    }
+
+    .series-title {
+      font-size: 16px;
+      font-weight: 700;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+
+    .series-meta {
+      font-size: 12px;
+      color: var(--muted);
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+
+    .series-toolbar {
+      display: grid;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .series-group {
+      display: grid;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .series-group.is-hidden {
+      display: none;
+    }
+
+    .series-group-title {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .chip-row {
+      display: none;
+      flex-wrap: wrap;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .chip-row.is-visible {
+      display: flex;
+    }
+
+    .chip-button {
+      padding: 9px 12px;
+      border-radius: 999px;
+      background: #10213a;
+      border: 1px solid #2a3d5a;
+      line-height: 1;
+    }
+
+    .chip-button.is-selected {
+      background: linear-gradient(180deg, #1d4ed8, #1843b0);
+      border-color: #3b82f6;
+      box-shadow: inset 0 0 0 1px rgba(59, 130, 246, 0.32);
+    }
+
+    .series-episodes {
+      display: none;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 8px;
+      max-height: 320px;
+      overflow: auto;
+      padding-right: 2px;
+    }
+
+    .series-episodes.is-visible {
+      display: grid;
+    }
+
+    .series-episodes button {
+      width: 100%;
+      min-width: 0;
+      padding: 11px 12px;
+      background: #10213a;
+      border-color: #2a3d5a;
+      text-align: center;
+      line-height: 1.15;
+      white-space: normal;
+      font-weight: 700;
+    }
+
+    .series-episodes button.is-selected {
+      background: linear-gradient(180deg, #1d4ed8, #1843b0);
+      border-color: #3b82f6;
+      box-shadow: inset 0 0 0 1px rgba(59, 130, 246, 0.32);
+    }
+
+    .status {
+      font-size: 13px;
+      color: var(--muted);
+      overflow-wrap: anywhere;
+      word-break: break-word;
+      min-width: 0;
+    }
+
+    .rooms-page {
+      display: none;
+      gap: 16px;
+    }
+
+    .rooms-page.is-visible {
+      display: grid;
+    }
+
+    .rooms-header {
+      display: grid;
+      gap: 12px;
+      padding: 22px;
+    }
+
+    .rooms-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .rooms-toolbar .inline-join {
+      min-width: min(100%, 520px);
+      flex: 1 1 520px;
+    }
+
+    .rooms-grid {
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    }
+
+    .room-card {
+      display: grid;
+      gap: 10px;
+    }
+
+    .room-card-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .room-card-actions button {
+      background: #13213a;
+    }
+
+    .player-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .player-menu {
+      position: relative;
+    }
+
+    .player-menu > summary {
+      list-style: none;
+    }
+
+    .player-menu > summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .player-menu-panel {
+      position: absolute;
+      right: 0;
+      top: calc(100% + 8px);
+      min-width: 220px;
+      padding: 12px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: #0b1424;
+      box-shadow: var(--shadow);
+      z-index: 10;
+      display: grid;
+      gap: 10px;
+    }
+
+    .player-menu-title {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .player-menu-panel .chip-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @media (max-width: 1160px) {
+      .dashboard {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .shell {
+        width: min(100vw - 20px, 1400px);
+        margin-top: 10px;
+      }
+
+      .topbar {
+        position: static;
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .topbar-actions {
+        justify-content: flex-start;
+      }
+
+      .join-grid,
+      .join-layout,
+      .room-summary-grid,
+      .chat-form {
+        grid-template-columns: 1fr;
+      }
+
+      .rooms-toolbar .inline-join {
+        min-width: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-title">WatchTogether</div>
+        <div class="brand-subtitle">Persistent rooms, chat, playlist, and synchronized playback</div>
+      </div>
+      <div class="topbar-actions">
+        <a id="homeLink" class="nav-link" href="./">Home</a>
+        <a id="roomsLink" class="nav-link" href="./?page=rooms">Rooms</a>
+        <button id="topbarRoomCodeButton" class="pill code-button hidden" type="button">
+          <span class="label">Room code</span>
+          <span id="topbarRoomCodeValue" class="value">-</span>
+        </button>
+      </div>
+    </header>
+
+    <section id="joinView" class="panel join-panel">
+      <div class="section-block">
+        <h1>Create or join a room</h1>
+        <p>Room codes are persistent. Create one room and reuse the same code later from any supported page or device.</p>
+      </div>
+      <div class="field">
+        <label for="nicknameInput">Nickname</label>
+        <input id="nicknameInput" placeholder="Your nickname" />
+      </div>
+      <div class="join-layout">
+        <section class="setup-card">
+          <div>
+            <h2>Create a room</h2>
+            <p>Create a persistent room code and share it with other participants.</p>
+          </div>
+          <button id="createRoomButton" type="button">Create room</button>
+          <button id="createdRoomCodeButton" class="pill code-button room-code-output hidden" type="button">
+            <span class="label">Room code</span>
+            <span id="createdRoomCodeValue" class="value">-</span>
+          </button>
+          <div id="createHint" class="status">Waiting for room creation.</div>
+        </section>
+        <section class="setup-card">
+          <div>
+            <h2>Join a room</h2>
+            <p>Enter an existing room code to join the active session.</p>
+          </div>
+          <div class="join-grid">
+            <div class="field">
+              <label for="roomCodeInput">Room code</label>
+              <input id="roomCodeInput" placeholder="Enter a room code" />
+            </div>
+          </div>
+          <div class="join-actions">
+            <button id="joinRoomButton" class="secondary" type="button">Join room</button>
+            <a class="nav-link" href="/rooms">Browse all rooms</a>
+          </div>
+          <div id="joinHint" class="status">Waiting for a room action.</div>
+        </section>
+      </div>
+    </section>
+
+    <section id="dashboardView" class="workspace hidden">
+      <section class="dashboard">
+        <div class="dashboard-column">
+          <section class="panel card">
+            <div class="card-header">
+              <div class="card-title">
+                <h2>Playback</h2>
+                <p>Search, load media, or switch episodes for the active room.</p>
+              </div>
+              <button id="reconnectButton" class="small-button secondary" type="button">Reconnect</button>
+            </div>
+            <div class="inline-join">
+              <input id="searchInput" placeholder="Example: rezka мистер робот" />
+              <button id="searchButton" type="button">Search</button>
+            </div>
+            <div id="searchHint" class="status">Only the host can trigger a search.</div>
+            <div id="seriesPanel" class="series-panel" aria-live="polite">
+              <div class="series-header">
+                <div id="seriesTitle" class="series-title"></div>
+                <div id="seriesMeta" class="series-meta"></div>
+              </div>
+              <div class="series-toolbar">
+                <div class="series-group">
+                  <div class="series-group-title">Seasons</div>
+                  <div id="seasonButtons" class="chip-row"></div>
+                </div>
+                <div class="series-group">
+                  <div class="series-group-title">Translators</div>
+                  <div id="translatorButtons" class="chip-row"></div>
+                </div>
+              </div>
+              <div class="series-group">
+                <div class="series-group-title">Episodes</div>
+                <div id="seriesEpisodes" class="series-episodes" role="list"></div>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel card">
+        <div class="card-header">
+          <div class="card-title">
+            <h2>Player</h2>
+            <p>Native HTML5 playback with HLS support for public streams.</p>
+          </div>
+          <div class="player-header-actions">
+            <div class="pill" id="currentMediaBadge">Nothing loaded</div>
+            <details id="playerQualityMenu" class="player-menu hidden">
+              <summary class="small-button secondary" aria-label="Player settings">⋮</summary>
+              <div class="player-menu-panel">
+                <div class="player-menu-title">Quality</div>
+                <div id="qualityButtons" class="chip-row"></div>
+              </div>
+            </details>
+          </div>
+        </div>
+        <div class="player-shell">
+          <video id="video" controls playsinline></video>
+        </div>
+      </section>
+        </div>
+
+        <aside class="sidebar">
+          <section class="panel card">
+            <div class="card-header">
+              <div class="card-title">
+                <h2>Active room</h2>
+                <p id="activeRoomTitle">No room selected</p>
+              </div>
+              <div class="player-header-actions">
+                <button id="deleteActiveRoomButton" class="small-button secondary hidden" type="button">Delete room</button>
+                <button id="leaveRoomButton" class="small-button secondary" type="button">Leave room</button>
+              </div>
+            </div>
+            <div class="room-summary-grid">
+              <div class="stat">
+                <span class="stat-label">Session</span>
+                <span id="sessionDuration" class="stat-value">00:00:00</span>
+              </div>
+            </div>
+            <div id="roomStatus" class="status">Join a room to unlock the dashboard.</div>
+          </section>
+
+          <section class="panel card">
+            <div class="card-header">
+              <div class="card-title">
+                <h2>Participants</h2>
+                <p>Nickname, role, and room join time.</p>
+              </div>
+            </div>
+            <div id="participantsList" class="participants-list"></div>
+          </section>
+
+          <section class="panel card">
+            <div class="card-header">
+              <div class="card-title">
+                <h2>Chat</h2>
+                <p>Messages are scoped to the active room.</p>
+              </div>
+            </div>
+            <div id="chatMessages" class="chat-list"></div>
+            <form id="chatForm" class="chat-form">
+              <textarea id="chatInput" placeholder="Write a message"></textarea>
+              <button id="chatSendButton" type="submit">Send</button>
+            </form>
+          </section>
+
+          <section class="panel card">
+            <div class="card-header">
+              <div class="card-title">
+                <h2>Playlist</h2>
+                <p>Queue the current stream or promote a suggestion.</p>
+              </div>
+            </div>
+            <div class="join-actions">
+              <button id="addToPlaylistButton" type="button">Add to playlist</button>
+              <button id="suggestButton" class="secondary" type="button">Suggest</button>
+            </div>
+            <div id="playlistList" class="playlist-list"></div>
+          </section>
+        </aside>
+      </section>
+    </section>
+
+    <section id="roomsView" class="rooms-page panel hidden">
+      <div class="rooms-header">
+        <div class="card-title">
+          <h1>All rooms</h1>
+          <p>Persistent room registry with live member counts, active media, and session timers.</p>
+        </div>
+        <div class="rooms-toolbar">
+          <button id="refreshRoomsButton" type="button">Refresh rooms</button>
+          <button id="roomsCreateButton" type="button">Create room</button>
+          <div class="inline-join">
+            <input id="roomsJoinInput" placeholder="Enter room code" />
+            <button id="roomsJoinButton" type="button">Join room</button>
+          </div>
+        </div>
+      </div>
+      <div id="roomsGrid" class="rooms-grid"></div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@1"></script>
+  <script src="./src/app.js?v=20260528-4" type="module"></script>
+</body>
+</html>
